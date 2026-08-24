@@ -56,6 +56,15 @@ jobs:
           cd automation/appium
           mvn clean test -DsuiteXmlFile=testng.xml || echo "Tests completed"
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: |
+          pip install openpyxl
+
       - name: Generate Reports
         run: |
           python automation/utils/generate_appium_reports.py
