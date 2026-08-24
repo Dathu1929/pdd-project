@@ -169,8 +169,7 @@ def create_excel_report():
         cell.fill = fill_header
     ws_defects.append(["No defects found. All E2E test suites passed successfully."])
 
-    # Save
-    out_dir = r"c:\Users\manga\Downloads\ElectricityBillMonitoring\Test Results\Excel"
+    out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Test Results", "Excel"))
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "Automation_Test_Report.xlsx")
     wb.save(out_path)

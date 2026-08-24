@@ -53,7 +53,7 @@ def generate_all_reports():
                 "actual": f"Verified successfully in {exec_time}"
             })
 
-    base_dir = r"c:\Users\manga\Downloads\ElectricityBillMonitoring\Test Results"
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "Test Results"))
     os.makedirs(os.path.join(base_dir, "Excel"), exist_ok=True)
     os.makedirs(os.path.join(base_dir, "HTML"), exist_ok=True)
     os.makedirs(os.path.join(base_dir, "JSON"), exist_ok=True)
