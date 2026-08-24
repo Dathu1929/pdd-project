@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Circular shadow/glow effect -->
+    <path
+        android:fillColor="#E6EEFA"
+        android:pathData="M60,60m-52,0a52,52 0,1 1,104 0a52,52 0,1 1,-104 0"/>
+    <!-- White Circle background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,60m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0"/>
+    <!-- Roof of the house -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#0A4CC7"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M35,62 L60,37 L85,62"/>
+    <!-- Walls of the house -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#0A4CC7"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M42,62 L42,83 L78,83 L78,62"/>
+    <!-- Lightbulb outline inside the house -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#0A4CC7"
+        android:strokeWidth="3"
+        android:pathData="M53,60 A9,9 0 1,1 67,60 C67,64 64,66 62,69 L62,73 L58,73 L58,69 C56,66 53,64 53,60 Z"/>
+    <!-- Bulb Base -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#0A4CC7"
+        android:strokeWidth="3"
+        android:pathData="M58,76 L62,76"/>
+    <!-- Lightning bolt inside bulb -->
+    <path
+        android:fillColor="#0A4CC7"
+        android:pathData="M61,51 L56,59 L59,59 L58,66 L63,58 L60,58 Z"/>
+</vector>

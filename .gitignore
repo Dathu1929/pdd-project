@@ -1,0 +1,35 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Gradle
+.gradle/
+build/
+android-app/build/
+android-app/.gradle/
+android-app/local.properties
+*.zip
+*.tar.gz
+
+# IDEA
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.db-shm
+*.db-wal
+
+# Maven
+target/
+automation/appium/target/
+automation/selenium/target/
+
+# OS/System files
+.DS_Store
+Thumbs.db

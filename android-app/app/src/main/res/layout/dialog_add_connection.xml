@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/et_board_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Electricity Board (e.g. TANGEDCO)"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/et_service_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Service Number (e.g. EB/321232345600/12)"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/et_consumer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Consumer Name"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <EditText
+        android:id="@+id/et_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address"
+        android:inputType="text" />
+</LinearLayout>

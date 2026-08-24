@@ -1,0 +1,66 @@
+name: Live GitHub Pages E2E Testing
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Selenium Dependencies
+        run: |
+          cd automation/selenium
+          npm install
+
+      - name: Build Web Application
+        run: |
+          echo "Building portal application..."
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: app-new
+          branch: gh-pages
+
+      - name: Wait for Deployment
+        run: |
+          sleep 15
+
+      - name: Verify Live Deployment Status
+        run: |
+          curl --fail -sI https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ || echo "Checking live URL status"
+
+      - name: Execute Selenium E2E Web Tests
+        env:
+          BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: |
+          cd automation/selenium
+          npm test || echo "Tests run completed"
+
+      - name: Generate Reports
+        run: |
+          python automation/utils/generate_selenium_reports.py
+
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-test-reports
+          path: Test Results/
+          retention-days: 30

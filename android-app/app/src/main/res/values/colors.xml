@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Premium Palette -->
+    <color name="primary">#0F52BA</color>     <!-- Elegant Dark Blue -->
+    <color name="primary_light">#4B86F0</color>
+    <color name="accent">#00E5FF</color>
+    <color name="bg_dark">#0B111E</color>      <!-- Sleek Dark Mode Background -->
+    <color name="card_dark">#152033</color>    <!-- Card Dark Variant -->
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_muted">#7C8BA1</color>
+    <color name="green_success">#00E676</color>
+    <color name="orange_warning">#FF9100</color>
+    <color name="red_error">#FF1744</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_bg">#F8FAFC</color>
+    <color name="grey_border">#E2E8F0</color>
+    <color name="text_dark">#0F172A</color>
+    <color name="text_dark_muted">#475569</color>
+    <color name="ic_launcher_background">#0F52BA</color>
+</resources>
