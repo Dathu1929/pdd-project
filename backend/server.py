@@ -493,10 +493,9 @@ def global_exception_handler(request, exc):
     )
 
 # Serve Frontend static assets
+# Serve Frontend static assets
 static_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app-new"))
-@app.get("/")
-def read_root():
-    return FileResponse(os.path.join(static_path, "index.html"))
+app.mount("/", StaticFiles(directory=static_path, html=True), name="static")
 
 init_db()
 
