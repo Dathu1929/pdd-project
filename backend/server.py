@@ -357,6 +357,47 @@ def make_payment(data: PaymentSchema, user_id: int = Depends(get_current_user_id
     cursor.execute("INSERT INTO notifications (user_id, title, message, created_at) VALUES (?, ?, ?, ?)",
                    (user_id, "Payment Successful", f"Payment of ₹{data.amount:.2f} was successful. Transaction Ref: {tx_ref}", now))
     
+    # Automatically generate next month's bill for the same meter
+    try:
+        bill_month_str = bill["billing_month"]
+        due_date_str = bill["due_date"]
+        
+        import calendar
+        from datetime import datetime as dt, timedelta
+        
+        current_due = dt.strptime(due_date_str, "%Y-%m-%d")
+        next_due = current_due + timedelta(days=30)
+        next_due_str = next_due.strftime("%Y-%m-%d")
+        
+        parts = bill_month_str.split(" ")
+        if len(parts) == 2:
+            months = list(calendar.month_name)
+            if parts[0] in months:
+                idx = months.index(parts[0])
+                next_idx = idx + 1 if idx < 12 else 1
+                next_year = int(parts[1]) if idx < 12 else int(parts[1]) + 1
+                next_month_name = f"{months[next_idx]} {next_year}"
+            else:
+                next_month_name = "Next Month"
+        else:
+            next_month_name = "Next Month"
+            
+        cursor.execute("SELECT COUNT(*) as count FROM bills WHERE meter_id = ? AND billing_month = ?", (bill["meter_id"], next_month_name))
+        if cursor.fetchone()["count"] == 0:
+            next_amount = round(bill["amount"] * 0.95 + 50.0, 2)
+            next_units = round(bill["units_consumed"] * 0.98, 1)
+            cursor.execute("""
+                INSERT INTO bills (meter_id, billing_month, units_consumed, amount, due_date, payment_status)
+                VALUES (?, ?, ?, ?, ?, 'Unpaid')
+            """, (bill["meter_id"], next_month_name, next_units, next_amount, next_due_str))
+            
+            cursor.execute("""
+                INSERT INTO notifications (user_id, title, message, created_at)
+                VALUES (?, 'New Bill Generated', ?, ?)
+            """, (user_id, f"Your electricity bill for {next_month_name} of ₹{next_amount:.2f} has been generated.", now))
+    except Exception as e:
+        print(f"Error generating next month bill: {e}")
+        
     conn.commit()
     conn.close()
     return {"message": "Payment successful", "transaction_ref": tx_ref}
@@ -375,7 +416,11 @@ def toggle_reminder(data: ReminderToggleSchema, user_id: int = Depends(get_curre
     conn = get_db()
     cursor = conn.cursor()
     val = 1 if data.enabled else 0
-    cursor.execute("UPDATE reminders SET enabled = ? WHERE user_id = ? AND days_before = ?", (val, user_id, data.days_before))
+    cursor.execute("SELECT COUNT(*) as count FROM reminders WHERE user_id = ? AND days_before = ?", (user_id, data.days_before))
+    if cursor.fetchone()["count"] == 0:
+        cursor.execute("INSERT INTO reminders (user_id, days_before, enabled) VALUES (?, ?, ?)", (user_id, data.days_before, val))
+    else:
+        cursor.execute("UPDATE reminders SET enabled = ? WHERE user_id = ? AND days_before = ?", (val, user_id, data.days_before))
     conn.commit()
     conn.close()
     return {"message": "Reminder updated successfully"}

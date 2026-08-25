@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.smartelectricity.app.network.ApiClient
@@ -25,41 +27,32 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Auto-login check commented out to prevent auto-skipping the login page
-        /*
-        val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
-        val savedToken = sharedPref.getString("TOKEN", null)
-        if (savedToken != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("TOKEN", savedToken)
-            intent.putExtra("NAME", sharedPref.getString("NAME", ""))
-            startActivity(intent)
-            finish()
-            return
-        }
-        */
+        // Initialize Dynamic API Client Base URL
+        ApiClient.initialize(this)
+        api = ApiClient.api
 
         setContentView(R.layout.activity_login)
-
-        // API Client Initialization
-        api = ApiClient.api
 
         val etEmail = findViewById<EditText>(R.id.et_email)
         val etPassword = findViewById<EditText>(R.id.et_password)
         val btnLogin = findViewById<Button>(R.id.btn_login)
         val tvRegister = findViewById<TextView>(R.id.tv_register)
+        val ivHeaderBg = findViewById<ImageView>(R.id.iv_header_bg)
 
         // Prepopulate with last saved email or fallback to test user
         val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
-        // noinspection SpellCheckingInspection
         val savedEmail = sharedPref.getString("EMAIL", "dattu@gmail.com")
         etEmail.setText(savedEmail)
-        // noinspection SpellCheckingInspection
         if (savedEmail == "dattu@gmail.com") {
-            // noinspection SpellCheckingInspection
             etPassword.setText("dattu123")
         } else {
             etPassword.setText("")
+        }
+
+        // Long-click the header image to change the Backend Server URL (e.g. for different Wi-Fi / Ngrok)
+        ivHeaderBg.setOnLongClickListener {
+            showConfigureUrlDialog()
+            true
         }
 
         btnLogin.setOnClickListener {
@@ -70,6 +63,9 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Ensure we use the latest api instance (in case the base URL was modified)
+            api = ApiClient.api
 
             api.login(LoginRequest(email, password)).enqueue(object : Callback<AuthResponse> {
                 override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
@@ -95,7 +91,8 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                    Toast.makeText(this@LoginActivity, "Connection failed. Please ensure the backend server is running and check your network.", Toast.LENGTH_LONG).show()
+                    val currentUrl = sharedPref.getString("BACKEND_URL", "http://192.168.137.87:8000/")
+                    Toast.makeText(this@LoginActivity, "Connection failed to $currentUrl. Long-press top banner to configure.", Toast.LENGTH_LONG).show()
                 }
             })
         }
@@ -104,5 +101,30 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun showConfigureUrlDialog() {
+        val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
+        val currentUrl = sharedPref.getString("BACKEND_URL", "http://192.168.137.87:8000/")
+
+        val input = EditText(this)
+        input.setText(currentUrl)
+        input.setPadding(32, 16, 32, 16)
+
+        AlertDialog.Builder(this)
+            .setTitle("Configure Server URL")
+            .setMessage("Enter the backend server address (e.g. http://192.168.1.100:8000/ or your Ngrok public URL):")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                val newUrl = input.text.toString().trim()
+                if (newUrl.isNotEmpty()) {
+                    sharedPref.edit().putString("BACKEND_URL", newUrl).apply()
+                    ApiClient.updateUrl(newUrl)
+                    api = ApiClient.api
+                    Toast.makeText(this, "Server URL updated to: $newUrl", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

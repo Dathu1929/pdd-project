@@ -5,12 +5,27 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Electricity Board"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <Spinner
+        android:id="@+id/spinner_board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginBottom="12dp" />
+
     <EditText
         android:id="@+id/et_board_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Electricity Board (e.g. TANGEDCO)"
+        android:hint="Enter Custom Board Name"
         android:inputType="text"
+        android:visibility="gone"
         android:layout_marginBottom="12dp" />
 
     <EditText

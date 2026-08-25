@@ -1,8 +1,9 @@
 package com.smartelectricity.app
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -151,18 +152,7 @@ class MainActivity : AppCompatActivity() {
 
         // Profile Icon dialog box (Account view and Logout shortcut)
         findViewById<View>(R.id.btn_profile).setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("My Account")
-                .setMessage("Name: $name\nManage your connection and monitoring details.\n\nWould you like to log out?")
-                .setPositiveButton("Log Out") { _, _ ->
-                    val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
-                    sharedPref.edit().clear().apply()
-                    Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
+            showProfileDialog()
         }
 
         bottomNav.setOnItemSelectedListener { item ->
@@ -184,12 +174,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile -> {
-                    val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
-                    sharedPref.edit().clear().apply()
-                    Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                    true
+                    showProfileDialog()
+                    false
                 }
                 else -> false
             }
@@ -199,6 +185,49 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshDashboardData()
+    }
+
+    private fun showProfileDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_profile_details, null)
+        val tvName = dialogView.findViewById<TextView>(R.id.tv_profile_name)
+        val tvEmail = dialogView.findViewById<TextView>(R.id.tv_profile_email)
+        val tvPhone = dialogView.findViewById<TextView>(R.id.tv_profile_phone)
+        val tvAltPhone = dialogView.findViewById<TextView>(R.id.tv_profile_alt_phone)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("Close", null)
+            .setNeutralButton("Log Out") { _, _ ->
+                val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
+                sharedPref.edit().clear().apply()
+                Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finish()
+            }
+            .create()
+
+        dialog.show()
+
+        val authHeader = "Bearer $token"
+        api.getProfile(authHeader).enqueue(object : Callback<UserProfile> {
+            override fun onResponse(call: Call<UserProfile>, response: Response<UserProfile>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val profile = response.body()!!
+                    tvName.text = profile.name
+                    tvEmail.text = profile.email
+                    tvPhone.text = profile.phone ?: "Not Provided"
+                    tvAltPhone.text = profile.alternatePhone ?: "Not Provided"
+                } else {
+                    Toast.makeText(this@MainActivity, "Failed to load profile details", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<UserProfile>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Connection failed. Please check your network.", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun refreshDashboardData() {

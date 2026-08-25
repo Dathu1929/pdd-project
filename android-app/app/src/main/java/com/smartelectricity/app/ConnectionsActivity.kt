@@ -88,12 +88,8 @@ class ConnectionsActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile -> {
-                    val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
-                    sharedPref.edit().clear().apply()
-                    Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                    true
+                    showProfileDialog()
+                    false
                 }
                 else -> false
             }
@@ -150,18 +146,104 @@ class ConnectionsActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showProfileDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_profile_details, null)
+        val tvName = dialogView.findViewById<TextView>(R.id.tv_profile_name)
+        val tvEmail = dialogView.findViewById<TextView>(R.id.tv_profile_email)
+        val tvPhone = dialogView.findViewById<TextView>(R.id.tv_profile_phone)
+        val tvAltPhone = dialogView.findViewById<TextView>(R.id.tv_profile_alt_phone)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("Close", null)
+            .setNeutralButton("Log Out") { _, _ ->
+                val sharedPref = getSharedPreferences("SmartElectricityPrefs", MODE_PRIVATE)
+                sharedPref.edit().clear().apply()
+                Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finish()
+            }
+            .create()
+
+        dialog.show()
+
+        val authHeader = "Bearer $token"
+        api.getProfile(authHeader).enqueue(object : Callback<com.smartelectricity.app.network.UserProfile> {
+            override fun onResponse(
+                call: Call<com.smartelectricity.app.network.UserProfile>,
+                response: Response<com.smartelectricity.app.network.UserProfile>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    val profile = response.body()!!
+                    tvName.text = profile.name
+                    tvEmail.text = profile.email
+                    tvPhone.text = profile.phone ?: "Not Provided"
+                    tvAltPhone.text = profile.alternatePhone ?: "Not Provided"
+                } else {
+                    Toast.makeText(this@ConnectionsActivity, "Failed to load profile details", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<com.smartelectricity.app.network.UserProfile>, t: Throwable) {
+                Toast.makeText(this@ConnectionsActivity, "Connection failed. Please check your network.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun showAddConnectionDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_connection, null)
+        val spinnerBoard = dialogView.findViewById<android.widget.Spinner>(R.id.spinner_board)
         val etBoard = dialogView.findViewById<EditText>(R.id.et_board_name)
         val etService = dialogView.findViewById<EditText>(R.id.et_service_number)
         val etConsumer = dialogView.findViewById<EditText>(R.id.et_consumer_name)
         val etAddress = dialogView.findViewById<EditText>(R.id.et_address)
 
+        val boards = arrayOf(
+            "TANGEDCO (Tamil Nadu)",
+            "BESCOM (Karnataka)",
+            "MSEDCL (Maharashtra)",
+            "KSEB (Kerala)",
+            "TSSPDCL (Telangana)",
+            "UPPCL (Uttar Pradesh)",
+            "CESC (West Bengal)",
+            "PSPCL (Punjab)",
+            "APEPDCL (Andhra Pradesh)",
+            "DHBVN (Haryana)",
+            "Tata Power",
+            "Adani Electricity",
+            "Other (Custom Board)"
+        )
+
+        val spinnerAdapter = android.widget.ArrayAdapter(this, android.R.layout.simple_spinner_item, boards)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerBoard.adapter = spinnerAdapter
+
+        spinnerBoard.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (boards[position] == "Other (Custom Board)") {
+                    etBoard.visibility = View.VISIBLE
+                } else {
+                    etBoard.visibility = View.GONE
+                }
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+                etBoard.visibility = View.GONE
+            }
+        }
+
         AlertDialog.Builder(this)
             .setTitle("Add Connection")
             .setView(dialogView)
             .setPositiveButton("Add") { _, _ ->
-                val board = etBoard.text.toString().trim()
+                val selectedBoard = spinnerBoard.selectedItem.toString()
+                val board = if (selectedBoard == "Other (Custom Board)") {
+                    etBoard.text.toString().trim()
+                } else {
+                    selectedBoard
+                }
                 val service = etService.text.toString().trim()
                 val consumer = etConsumer.text.toString().trim()
                 val address = etAddress.text.toString().trim()
