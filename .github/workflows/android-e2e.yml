@@ -44,6 +44,20 @@ jobs:
             echo "Emulator started successfully"
             adb devices
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: |
+          pip install fastapi uvicorn python-jose[cryptography] openpyxl
+
+      - name: Start Backend Server
+        run: |
+          python backend/server.py &
+          sleep 5
+
       - name: Start Appium Server
         run: |
           npm install -g appium
@@ -55,15 +69,6 @@ jobs:
         run: |
           cd automation/appium
           mvn clean test -DsuiteXmlFile=testng.xml || echo "Tests completed"
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install Python dependencies
-        run: |
-          pip install openpyxl
 
       - name: Generate Reports
         run: |
