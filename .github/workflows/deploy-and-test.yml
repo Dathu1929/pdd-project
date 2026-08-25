@@ -47,13 +47,6 @@ jobs:
         run: |
           curl --fail -sI https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ || echo "Checking live URL status"
 
-      - name: Execute Selenium E2E Web Tests
-        env:
-          BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-        run: |
-          cd automation/selenium
-          npm test || echo "Tests run completed"
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -61,7 +54,19 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install openpyxl
+          pip install fastapi uvicorn python-jose[cryptography] openpyxl
+
+      - name: Start Backend Server
+        run: |
+          python backend/server.py &
+          sleep 5
+
+      - name: Execute Selenium E2E Web Tests
+        env:
+          BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: |
+          cd automation/selenium
+          npm test || echo "Tests run completed"
 
       - name: Generate Reports
         run: |
