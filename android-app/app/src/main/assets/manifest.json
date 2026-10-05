@@ -1,0 +1,24 @@
+{
+  "name": "Smart Electricity Bill Monitoring",
+  "short_name": "Smart Electricity",
+  "description": "Monitor electricity consumption, manage meter connections, and pay bills.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0B1120",
+  "theme_color": "#1877F2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2983/2983804.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2983/2983804.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

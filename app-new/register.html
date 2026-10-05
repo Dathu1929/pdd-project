@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Smart Electricity Management Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --primary-dark: #1E40AF;
+      --bg-body: #F8FAFC;
+      --border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --danger: #EF4444;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .auth-container {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    .auth-banner {
+      flex: 1.1;
+      background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
+      color: #FFFFFF;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      backdrop-filter: blur(4px);
+    }
+
+    .banner-content h1 {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .banner-content p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+      max-width: 480px;
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .feature-item i {
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .banner-footer {
+      font-size: 13px;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Right Register Form */
+    .auth-form-side {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background-color: #FFFFFF;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .form-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .form-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper input {
+      width: 100%;
+      padding: 11px 14px 11px 42px;
+      background-color: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .input-wrapper i.left-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    }
+
+    .error-alert {
+      display: none;
+      padding: 12px 14px;
+      background-color: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FEE2E2;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      margin-bottom: 20px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .switch-auth {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .switch-auth a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .auth-banner { display: none; }
+      .auth-form-side { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <!-- Left Banner -->
+    <div class="auth-banner">
+      <div class="brand-header">
+        <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+        <span>Smart Electricity</span>
+      </div>
+
+      <div class="banner-content">
+        <h1>Register as a Consumer</h1>
+        <p>Set up automated reminders, link multiple regional electricity board connections, and manage your monthly utility expenses seamlessly.</p>
+        
+        <div class="feature-list">
+          <div class="feature-item"><i class="fas fa-check"></i> Multi-Board Utility Management</div>
+          <div class="feature-item"><i class="fas fa-check"></i> Automated Billing Dispatches to Mobile & Email</div>
+          <div class="feature-item"><i class="fas fa-check"></i> Safe & Instant UPI/Card Payment Verifications</div>
+        </div>
+      </div>
+
+      <div class="banner-footer">
+        <span>© 2026 Smart Electricity Monitoring System</span>
+      </div>
+    </div>
+
+    <!-- Right Register Form -->
+    <div class="auth-form-side">
+      <div class="form-wrapper">
+        <h2 class="form-title">Create Account</h2>
+        <p class="form-subtitle">Register to track electricity meters and receive due date alerts.</p>
+
+        <div class="error-alert" id="errorBox">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="errorMsg">Registration error</span>
+        </div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrapper">
+              <i class="far fa-user left-icon"></i>
+              <input type="text" id="regName" placeholder="Dathu Mangapati" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrapper">
+              <i class="far fa-envelope left-icon"></i>
+              <input type="email" id="regEmail" placeholder="name@domain.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone left-icon"></i>
+              <input type="tel" id="regPhone" placeholder="8639239093" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock left-icon"></i>
+              <input type="password" id="regPassword" placeholder="Create a password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="regBtn">Create Account</button>
+        </form>
+
+        <div class="switch-auth">
+          Already registered? <a href="login.html">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPABASE CONFIG MODAL -->
+  <div id="supabaseModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+    <div style="background:#fff; border-radius:12px; width:100%; max-width:440px; padding:24px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:16px; font-weight:700; color:#0F172A; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-bolt" style="color:#0D6EFD;"></i> Supabase Backend Settings
+        </h3>
+        <i class="fas fa-times" style="cursor:pointer; color:#64748B;" onclick="closeSupabaseModal()"></i>
+      </div>
+      <p style="font-size:13px; color:#64748B; margin-bottom:14px; line-height:1.5;">
+        Your backend runs 100% on Supabase (No Python server). Enter your Supabase Project details:
+      </p>
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:12px; font-weight:600; color:#334155; margin-bottom:4px;">Project URL</label>
+        <input type="text" id="cfgSupabaseUrl" placeholder="https://your-project.supabase.co" style="width:100%; padding:9px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;">
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-size:12px; font-weight:600; color:#334155; margin-bottom:4px;">Anon / Public API Key</label>
+        <input type="password" id="cfgSupabaseKey" placeholder="eyJhbGciOi..." style="width:100%; padding:9px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" onclick="closeSupabaseModal()" style="padding:8px 14px; border:1px solid #CBD5E1; background:#fff; border-radius:6px; font-size:13px; cursor:pointer;">Cancel</button>
+        <button type="button" onclick="saveSupabaseConfig()" style="padding:8px 16px; background:#0D6EFD; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Save & Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
+  <script>
+    if (localStorage.getItem("token")) {
+      window.location.href = "dashboard.html";
+    }
+
+    function openSupabaseModal() {
+      document.getElementById("cfgSupabaseUrl").value = localStorage.getItem("supabase_url") || "";
+      document.getElementById("cfgSupabaseKey").value = localStorage.getItem("supabase_anon_key") || "";
+      document.getElementById("supabaseModal").style.display = "flex";
+    }
+
+    function closeSupabaseModal() {
+      document.getElementById("supabaseModal").style.display = "none";
+    }
+
+    function saveSupabaseConfig() {
+      const url = document.getElementById("cfgSupabaseUrl").value.trim();
+      const key = document.getElementById("cfgSupabaseKey").value.trim();
+      if (!url || !key) {
+        alert("Please enter both Supabase Project URL and Anon Key.");
+        return;
+      }
+      setSupabaseConfig(url, key);
+      closeSupabaseModal();
+      alert("Supabase Backend configuration saved!");
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const phone = document.getElementById("regPhone").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const btn = document.getElementById("regBtn");
+      const errorBox = document.getElementById("errorBox");
+
+      errorBox.style.display = "none";
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Creating Account...`;
+
+      try {
+        // Save user profile locally for instant standalone & offline access
+        localStorage.setItem("token", "token_" + Date.now());
+        localStorage.setItem("userName", name);
+        localStorage.setItem("userEmail", email);
+        if (phone) localStorage.setItem("userPhone", phone);
+
+        let localUsers = [];
+        try {
+          localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
+        } catch (err) {
+          localUsers = [];
+        }
+        localUsers = localUsers.filter(u => u.email !== email);
+        localUsers.push({ name, email, phone, password });
+        localStorage.setItem("local_users", JSON.stringify(localUsers));
+
+        // Optionally sync with Supabase cloud if project URL is configured
+        if (typeof supabaseSignUp === 'function' && localStorage.getItem("supabase_url")) {
+          try {
+            const data = await supabaseSignUp(name, email, phone, password);
+            if (data && data.user) {
+              localStorage.setItem("supabase_user_id", data.user.id);
+              if (data.session) {
+                localStorage.setItem("token", data.session.access_token);
+              }
+            }
+          } catch (cloudErr) {
+            console.warn("Supabase registration note:", cloudErr.message);
+          }
+        }
+
+        // Successfully registered! Seamlessly redirect to the app
+        window.location.href = "index.html";
+      } catch (err) {
+        errorBox.style.display = "flex";
+        document.getElementById("errorMsg").textContent = err.message || "Registration failed";
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "Create Account";
+      }
+    }
+  </script>
+</body>
+</html>

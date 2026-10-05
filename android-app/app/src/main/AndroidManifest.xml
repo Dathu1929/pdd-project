@@ -3,6 +3,9 @@
     package="com.smartelectricity.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -13,27 +16,66 @@
         android:theme="@style/Theme.SmartElectricity"
         android:usesCleartextTraffic="true">
 
-        <!-- Splash Activity as Launcher -->
+        <!-- Login Activity -->
         <activity
-            android:name=".SplashActivity"
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Home Activity -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- History Activity -->
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Settings Activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Register Activity -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Profile Activity -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Reminders Activity -->
+        <activity
+            android:name=".RemindersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Add Connection Activity -->
+        <activity
+            android:name=".AddConnectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartElectricity.NoActionBar" />
+
+        <!-- Main WebView Activity (Launcher) -->
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.SmartElectricity.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".OnboardingActivity" android:exported="false" android:theme="@style/Theme.SmartElectricity.NoActionBar" />
-        <activity android:name=".LoginActivity" android:exported="false" android:theme="@style/Theme.SmartElectricity.NoActionBar" />
-        <activity android:name=".RegisterActivity" android:exported="false" android:theme="@style/Theme.SmartElectricity.NoActionBar" />
-        <activity android:name=".MainActivity" android:exported="false" />
-        <activity android:name=".BillDetailsActivity" android:exported="false" />
-        <activity android:name=".PaymentActivity" android:exported="false" />
-        <activity android:name=".ConnectionsActivity" android:exported="false" />
-        <activity android:name=".NotificationsActivity" android:exported="false" />
-        <activity android:name=".ChatActivity" android:exported="false" />
-        <activity android:name=".AnalyticsActivity" android:exported="false" />
 
     </application>
 

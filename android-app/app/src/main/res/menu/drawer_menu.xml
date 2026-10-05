@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_connections"
+            android:icon="@android:drawable/ic_menu_mylocation"
+            android:title="My Connections" />
+        <item
+            android:id="@+id/nav_bills"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Bills" />
+        <item
+            android:id="@+id/nav_payments"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="Payments" />
+        <item
+            android:id="@+id/nav_reminders"
+            android:icon="@android:drawable/ic_popup_reminder"
+            android:title="Reminders" />
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@android:drawable/ic_popup_sync"
+            android:title="Notifications" />
+        <item
+            android:id="@+id/nav_analytics"
+            android:icon="@android:drawable/ic_menu_report_image"
+            android:title="Analytics" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Profile" />
+    </group>
+
+    <item android:title="System">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>

@@ -8,16 +8,16 @@ import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BasePage {
 
-    @AndroidFindBy(id = "com.smartelectricity.app:id/etEmail")
+    @AndroidFindBy(id = "com.smartelectricity.app:id/et_email")
     private WebElement emailField;
 
-    @AndroidFindBy(id = "com.smartelectricity.app:id/etPassword")
+    @AndroidFindBy(id = "com.smartelectricity.app:id/et_password")
     private WebElement passwordField;
 
-    @AndroidFindBy(id = "com.smartelectricity.app:id/btnLogin")
+    @AndroidFindBy(id = "com.smartelectricity.app:id/btn_login")
     private WebElement loginButton;
 
-    @AndroidFindBy(id = "com.smartelectricity.app:id/tvRegister")
+    @AndroidFindBy(id = "com.smartelectricity.app:id/tv_register")
     private WebElement registerLink;
 
     public LoginPage(AppiumDriver driver) {
